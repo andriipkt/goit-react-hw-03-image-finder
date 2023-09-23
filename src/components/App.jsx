@@ -9,26 +9,30 @@ import fetchAPI from './API-service/API-service';
 
 export class App extends Component {
   state = {
-    searchQuery: '',
+    query: '',
     images: [],
     page: 1,
     error: null,
     isLoading: false,
     showModal: false,
     modalImage: '',
+    loadMore: true,
   };
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.page !== this.state.page) {
+    if (
+      this.state.page !== prevState.page ||
+      this.state.query !== prevState.query
+    ) {
       this.fetchImages();
     }
   }
 
-  queryOnChange = value => {
-    this.setState({
-      searchQuery: value,
-    });
-  };
+  // queryOnChange = value => {
+  //   this.setState({
+  //     searchQuery: value,
+  //   });
+  // };
 
   loadMoreImages = () => {
     this.setState(prevState => ({
@@ -37,13 +41,16 @@ export class App extends Component {
   };
 
   fetchImages = async () => {
-    const { searchQuery, page } = this.state;
+    const { query, page } = this.state;
 
     try {
-      const response = await fetchAPI(searchQuery, page);
+      const response = await fetchAPI(query, page);
+      const { hits, totalHits } = response.data;
+
       this.setState(prevState => ({
-        images: [...prevState.images, ...response.data.hits],
+        images: [...prevState.images, ...hits],
         error: null,
+        loadMore: prevState.page < Math.ceil(totalHits / 12),
       }));
     } catch (error) {
       console.error(error);
@@ -63,6 +70,7 @@ export class App extends Component {
       page: 1,
       searchQuery,
     });
+    // this.fetchImages();
   };
 
   openModal = image => {
@@ -74,16 +82,22 @@ export class App extends Component {
   };
 
   render() {
-    const { searchQuery, images, error, isLoading, showModal, modalImage } =
-      this.state;
+    const {
+      // searchQuery,
+      images,
+      error,
+      isLoading,
+      showModal,
+      modalImage,
+      loadMore,
+    } = this.state;
 
     return (
       <div className="App">
         <Searchbar
           onSubmit={this.handleSubmit}
-          onChange={this.queryOnChange}
-          searchQuery={searchQuery}
-          // onFetch={this.fetchImages}
+          // onChange={this.queryOnChange}
+          // searchQuery={searchQuery}
         />
         {error && <p>{error}</p>}
 
@@ -91,7 +105,7 @@ export class App extends Component {
 
         {isLoading && <Loader />}
 
-        {images.length > 0 && !isLoading && (
+        {loadMore && images.length > 0 && !isLoading && (
           <Button onClick={this.loadMoreImages} />
         )}
 

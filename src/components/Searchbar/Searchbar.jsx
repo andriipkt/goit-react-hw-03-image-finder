@@ -5,21 +5,26 @@ import Notiflix from 'notiflix';
 // { onSubmit, onChange, searchQuery }
 
 class Searchbar extends Component {
+  state = {
+    searchQuery: '',
+  };
+
   handleInputChange = event => {
     const { value } = event.target;
-    this.props.onChange(value);
+    // this.props.onChange(value);
+    this.setState({ searchQuery: value });
   };
 
   handleSubmit = event => {
     event.preventDefault();
 
-    const { onSubmit, searchQuery } = this.props;
+    const { onSubmit } = this.props;
 
-    if (searchQuery.trim() === '') {
+    if (this.state.searchQuery.trim() === '') {
       return Notiflix.Notify.warning('Будь-ласка введіть запит!');
     }
 
-    onSubmit(searchQuery);
+    onSubmit(this.state.searchQuery);
   };
 
   render() {
@@ -51,7 +56,7 @@ class Searchbar extends Component {
             autoFocus
             placeholder="Search images and photos"
             onChange={this.handleInputChange}
-            value={this.props.searchQuery}
+            value={this.state.searchQuery}
           />
         </form>
       </header>
