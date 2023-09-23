@@ -1,12 +1,11 @@
 import { Component } from 'react';
-import axios from 'axios';
-import Notiflix from 'notiflix';
 
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Button from './Button/Button';
 import Loader from './Loader/Loader';
 import Modal from './Modal/Modal';
+import fetchAPI from './API-service/API-service';
 
 export class App extends Component {
   state = {
@@ -19,28 +18,29 @@ export class App extends Component {
     modalImage: '',
   };
 
-  handleInputChange = event => {
-    const { value } = event.target;
-    this.setState({ searchQuery: value });
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.page !== this.state.page) {
+      this.fetchImages();
+    }
+  }
+
+  queryOnChange = value => {
+    this.setState({
+      searchQuery: value,
+    });
   };
 
   loadMoreImages = () => {
-    this.setState(
-      prevState => ({
-        page: prevState.page + 1,
-      }),
-      this.fetchImages
-    );
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }));
   };
 
   fetchImages = async () => {
     const { searchQuery, page } = this.state;
-    const API_KEY = '37124750-bb2205b7594ee961e8dd1b6b7';
-    const BASE_URL = `https://pixabay.com/api/?key=${API_KEY}`;
-    const URL = `${BASE_URL}&q=${searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=12`;
 
     try {
-      const response = await axios.get(URL);
+      const response = await fetchAPI(searchQuery, page);
       this.setState(prevState => ({
         images: [...prevState.images, ...response.data.hits],
         error: null,
@@ -53,34 +53,16 @@ export class App extends Component {
     }
   };
 
-  handleSubmit = async event => {
-    event.preventDefault();
-
-    const { searchQuery } = this.state;
-
-    if (searchQuery.trim() === '') {
-      return Notiflix.Notify.warning('Будь-ласка введіть запит!');
-    }
-
+  handleSubmit = searchQuery => {
     if (searchQuery === this.state.searchQuery) {
-      this.setState({
-        images: [],
-        page: 1,
-      });
+      alert('wrong query');
+      return;
     }
-
     this.setState({
-      isLoading: true,
+      images: [],
+      page: 1,
+      searchQuery,
     });
-
-    try {
-      await this.fetchImages();
-    } catch (error) {
-      console.error(error);
-      this.setState({ error: 'Помилка при завантаженні зображень.' });
-    } finally {
-      this.setState({ isLoading: false });
-    }
   };
 
   openModal = image => {
@@ -98,9 +80,10 @@ export class App extends Component {
     return (
       <div className="App">
         <Searchbar
-          handleSubmit={this.handleSubmit}
-          onChange={this.handleInputChange}
+          onSubmit={this.handleSubmit}
+          onChange={this.queryOnChange}
           searchQuery={searchQuery}
+          onFetch={this.fetchImages}
         />
         {error && <p>{error}</p>}
 
