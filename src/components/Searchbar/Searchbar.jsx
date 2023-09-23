@@ -13,7 +13,7 @@ class Searchbar extends Component {
   handleSubmit = event => {
     event.preventDefault();
 
-    const { onSubmit, searchQuery, onFetch } = this.props;
+    const { onSubmit, searchQuery } = this.props;
 
     if (searchQuery.trim() === '') {
       return Notiflix.Notify.warning('Будь-ласка введіть запит!');

@@ -83,7 +83,7 @@ export class App extends Component {
           onSubmit={this.handleSubmit}
           onChange={this.queryOnChange}
           searchQuery={searchQuery}
-          onFetch={this.fetchImages}
+          // onFetch={this.fetchImages}
         />
         {error && <p>{error}</p>}
 
