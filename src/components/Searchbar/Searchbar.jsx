@@ -1,8 +1,7 @@
 import { Component } from 'react';
 import css from './Searchbar.module.css';
 import Notiflix from 'notiflix';
-
-// { onSubmit, onChange, searchQuery }
+import PropTypes from 'prop-types';
 
 class Searchbar extends Component {
   state = {
@@ -11,7 +10,6 @@ class Searchbar extends Component {
 
   handleInputChange = event => {
     const { value } = event.target;
-    // this.props.onChange(value);
     this.setState({ searchQuery: value });
   };
 
@@ -65,3 +63,7 @@ class Searchbar extends Component {
 }
 
 export default Searchbar;
+
+Searchbar.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};

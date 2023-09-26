@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import Notiflix from 'notiflix';
 
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
@@ -15,11 +16,11 @@ export class App extends Component {
     error: null,
     isLoading: false,
     showModal: false,
-    modalImage: '',
+    modalImage: null,
     loadMore: true,
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(_, prevState) {
     if (
       this.state.page !== prevState.page ||
       this.state.query !== prevState.query
@@ -27,12 +28,6 @@ export class App extends Component {
       this.fetchImages();
     }
   }
-
-  // queryOnChange = value => {
-  //   this.setState({
-  //     searchQuery: value,
-  //   });
-  // };
 
   loadMoreImages = () => {
     this.setState(prevState => ({
@@ -42,6 +37,7 @@ export class App extends Component {
 
   fetchImages = async () => {
     const { query, page } = this.state;
+    this.setState({ isLoading: true });
 
     try {
       const response = await fetchAPI(query, page);
@@ -61,16 +57,14 @@ export class App extends Component {
   };
 
   handleSubmit = searchQuery => {
-    if (searchQuery === this.state.searchQuery) {
-      alert('wrong query');
-      return;
+    if (searchQuery === this.state.query) {
+      return Notiflix.Notify.warning('Будь-ласка введіть інший запит!');
     }
     this.setState({
       images: [],
       page: 1,
-      searchQuery,
+      query: searchQuery,
     });
-    // this.fetchImages();
   };
 
   openModal = image => {
@@ -82,24 +76,13 @@ export class App extends Component {
   };
 
   render() {
-    const {
-      // searchQuery,
-      images,
-      error,
-      isLoading,
-      showModal,
-      modalImage,
-      loadMore,
-    } = this.state;
+    const { images, error, isLoading, showModal, modalImage, loadMore } =
+      this.state;
 
     return (
       <div className="App">
-        <Searchbar
-          onSubmit={this.handleSubmit}
-          // onChange={this.queryOnChange}
-          // searchQuery={searchQuery}
-        />
-        {error && <p>{error}</p>}
+        <Searchbar onSubmit={this.handleSubmit} />
+        {error && <h2>{error}</h2>}
 
         <ImageGallery images={images} openModal={this.openModal} />
 

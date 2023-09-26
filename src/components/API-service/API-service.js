@@ -9,33 +9,3 @@ function fetchAPI(searchQuery, page) {
 }
 
 export default fetchAPI;
-
-// handleSubmit = async event => {
-//   event.preventDefault();
-
-//   const { searchQuery } = this.state;
-
-//   if (searchQuery.trim() === '') {
-//     return Notiflix.Notify.warning('Будь-ласка введіть запит!');
-//   }
-
-//   if (searchQuery === this.state.searchQuery) {
-//     this.setState({
-//       images: [],
-//       page: 1,
-//     });
-//   }
-
-//   this.setState({
-//     isLoading: true,
-//   });
-
-//   try {
-//     await this.fetchImages();
-//   } catch (error) {
-//     console.error(error);
-//     this.setState({ error: 'Помилка при завантаженні зображень.' });
-//   } finally {
-//     this.setState({ isLoading: false });
-//   }
-// };

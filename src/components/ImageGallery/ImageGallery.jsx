@@ -1,5 +1,6 @@
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import css from './ImageGallery.module.css';
+import PropTypes from 'prop-types';
 
 function ImageGallery({ images, openModal }) {
   return (
@@ -22,6 +23,7 @@ function ImageGallery({ images, openModal }) {
 
 export default ImageGallery;
 
-// id - унікальний ідентифікатор
-// webformatURL - посилання на маленьке зображення для списку карток
-// largeImageURL - посилання на велике зображення для модального вікна
+ImageGallery.propTypes = {
+  images: PropTypes.array.isRequired,
+  openModal: PropTypes.func.isRequired,
+};

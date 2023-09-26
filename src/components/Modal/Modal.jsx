@@ -1,9 +1,11 @@
 import css from './Modal.module.css';
+import PropTypes from 'prop-types';
 const { Component } = require('react');
 
 class Modal extends Component {
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyEsc);
+    console.log(this.props.image);
   }
 
   componentWillUnmount() {
@@ -36,3 +38,8 @@ class Modal extends Component {
 }
 
 export default Modal;
+
+Modal.propTypes = {
+  image: PropTypes.string.isRequired,
+  onClose: PropTypes.func.isRequired,
+};
