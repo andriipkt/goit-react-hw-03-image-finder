@@ -5,7 +5,6 @@ const { Component } = require('react');
 class Modal extends Component {
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyEsc);
-    console.log(this.props.image);
   }
 
   componentWillUnmount() {
@@ -40,6 +39,6 @@ class Modal extends Component {
 export default Modal;
 
 Modal.propTypes = {
-  image: PropTypes.string.isRequired,
+  image: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,
 };

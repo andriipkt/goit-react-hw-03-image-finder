@@ -6,7 +6,7 @@ import ImageGallery from './ImageGallery/ImageGallery';
 import Button from './Button/Button';
 import Loader from './Loader/Loader';
 import Modal from './Modal/Modal';
-import fetchAPI from './API-service/API-service';
+import fetchAPI from '../API-service/API-service';
 
 export class App extends Component {
   state = {
@@ -41,6 +41,14 @@ export class App extends Component {
 
     try {
       const response = await fetchAPI(query, page);
+
+      if (query === 'nigga') {
+        return Notiflix.Report.failure(
+          'Niga you gae',
+          'ahahah niga u gae',
+          'close but ur still gae'
+        );
+      }
       const { hits, totalHits } = response.data;
 
       this.setState(prevState => ({
