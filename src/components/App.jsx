@@ -42,14 +42,11 @@ export class App extends Component {
     try {
       const response = await fetchAPI(query, page);
 
-      if (query === 'nigga') {
-        return Notiflix.Report.failure(
-          'Niga you gae',
-          'ahahah niga u gae',
-          'close but ur still gae'
-        );
-      }
       const { hits, totalHits } = response.data;
+
+      if (hits.length === 0) {
+        return Notiflix.Notify.failure('Нічого не знайдемо за Вашим запитом');
+      }
 
       this.setState(prevState => ({
         images: [...prevState.images, ...hits],
